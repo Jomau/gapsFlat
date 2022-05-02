@@ -22,18 +22,18 @@ public class TestRanges {
     }
     
     @Test
-    public void testRangesSubtract1() {
+    public void testRangesRemove1() {
         Ranges ranges = new Ranges(1.0, 100.0);
         Interval toRemove = new Interval(1.0, 100.0);
-        ranges.subtract(toRemove);
-        assertThat (ranges.remaining.size(), is(0)); // checks ranges.iterator()
+        ranges.remove(toRemove);
+        assertThat (ranges.toString(), containsString("") ); // checks ranges.iterator()
     }
 
     @Test
-    public void testRangesSubtract2() {
+    public void testRangesRemove2() {
         Ranges ranges = new Ranges(1.0, 100.0);
         Interval toRemove = new Interval(1.000, 1.0);
-        ranges.subtract(toRemove);
+        ranges.remove(toRemove);
         Interval[] expected = { new Interval(1.0, 100.0) };
         assertThat (ranges, contains(expected)); // checks ranges.iterator()
     }
@@ -48,7 +48,6 @@ public class TestRanges {
     @Test
     public void testRangesIterator() {
         Ranges ranges = new Ranges(1.0, 100.0);
-        Interval[] expected = { new Interval(1.0, 100.0) };
         assertThat (ranges.iterator().hasNext(), is(true)); // checks ranges.iterator()
     }
     
