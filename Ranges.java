@@ -1,4 +1,5 @@
 
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -29,9 +30,6 @@ public class Ranges implements Iterable<Interval> {
    * @param toRemove the range of numbers to subtract
    */
   public void remove(Interval toRemove) {
-    if (toRemove.width() == 0.0) {
-      return;
-    }
     ListIterator<Interval> iter = remaining.listIterator();
     while (iter.hasNext()) {
       Interval current = iter.next();
@@ -43,7 +41,7 @@ public class Ranges implements Iterable<Interval> {
         iter.remove();
         if (lowerPart.width() > 0.0) {
           iter.add(lowerPart);
-        } else
+        }
         if (upperPart.width() > 0.0) {
           iter.add(upperPart);
         }

@@ -50,9 +50,10 @@ public class TestRanges {
     @Test
     public void testRangesRemove4() {
         Ranges ranges = new Ranges(2.0, 100.0);
-        Interval toRemove = new Interval(1.0, 100.0);
+        Interval toRemove = new Interval(1.0, 50.0);
         ranges.remove(toRemove);
-        assertThat (ranges.toString(), is("[]") ); // checks ranges.iterator()
+        Interval[] expected = { new Interval(50.0, 100.0) };
+        assertThat (ranges, contains(expected) ); // checks ranges.iterator()
     }
     
     @Test
