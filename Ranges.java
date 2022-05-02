@@ -1,4 +1,4 @@
-
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -6,9 +6,13 @@ import java.util.ListIterator;
 /**
  * An ordered sequence of disjoint (non-overlapping) intervals.   
  */
-public class Ranges implements Iterable<Interval> {
+public class Ranges extends edu.odu.cs.cs350.unitTesting.UnitTestTracker implements Iterable<Interval> {
 
-  LinkedList<Interval> remaining;
+  private static String[] mutatorNames = {"remove"};
+  private static String[] accessorNames = {"sum", "iterator"};
+  
+
+  private LinkedList<Interval> remaining;
 
   /**
    * Create a range with no gaps.
@@ -16,7 +20,9 @@ public class Ranges implements Iterable<Interval> {
    * @param low
    * @param high
    */
-  Ranges(double low, double high) {
+  public Ranges(double low, double high) {
+    super(Ranges.class, Arrays.asList(mutatorNames), Arrays.asList(accessorNames));
+    mutate();
     remaining = new LinkedList<>();
     remaining.add(new Interval(low, high));
   }
@@ -29,6 +35,10 @@ public class Ranges implements Iterable<Interval> {
    * @param toRemove the range of numbers to subtract
    */
   public void remove(Interval toRemove) {
+    mutate();
+    if (toRemove.width() == 0.0) {
+      return;
+    }
     ListIterator<Interval> iter = remaining.listIterator();
     while (iter.hasNext()) {
       Interval current = iter.next();
@@ -54,6 +64,7 @@ public class Ranges implements Iterable<Interval> {
    * @return the sum
    */
   public double sum() {
+    access();
     double total = 0.0;
     for (Interval interval : remaining) {
       total += interval.width();
@@ -76,6 +87,7 @@ public class Ranges implements Iterable<Interval> {
    * @return an iterator for the remaining intervals
    */
   public Iterator<Interval> iterator() {
+    access();
     return remaining.iterator();
   }
 

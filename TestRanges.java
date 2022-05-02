@@ -1,87 +1,79 @@
-package edu.odu.cs;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.ListIterator;
+import org.junit.jupiter.api.Test;
+//import static org.junit.jupiter.api.Assertions.*;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 /**
- * An ordered sequence of disjoint (non-overlapping) intervals.   
+ * Test of the Ranges class
  */
-public class Ranges implements Iterable<Interval> {
+public class TestRanges {
 
-  LinkedList<Interval> remaining;
+    double precision = 0.001;
 
-  /**
-   * Create a range with no gaps.
-   * 
-   * @param low
-   * @param high
-   */
-  Ranges(double low, double high) {
-    remaining = new LinkedList<>();
-    remaining.add(new Interval(low, high));
-  }
+    @Test
+    public void testConstructor() {
+        Ranges ranges = new Ranges(1.0, 100.0);
+        assertThat(ranges.sum(), closeTo(99.0, precision));
 
-  /**
-   * Remove an interval from the range. E.g., if we start with the
-   * range (0, 10), then subtracting (5,8) would leave all numbers in (0,5) and
-   * (8,10).
-   * 
-   * @param toRemove the range of numbers to subtract
-   */
-  public void remove(Interval toRemove) {
-    if (toRemove.width() == 0.0) {
-      return;
+        Interval[] expected = { new Interval(1.0, 100.0) };
+        assertThat (ranges, contains(expected)); // checks ranges.iterator()
     }
-    ListIterator<Interval> iter = remaining.listIterator();
-    while (iter.hasNext()) {
-      Interval current = iter.next();
-      if (current.getMin() > toRemove.getMax())
-        break;
-      if (current.overlaps((toRemove))) {
-        Interval lowerPart = current.below(toRemove.getMin());
-        Interval upperPart = current.above(toRemove.getMax());
-        iter.remove();
-        if (lowerPart.width() > 0.0) {
-          iter.add(lowerPart);
-        } else
-        if (upperPart.width() > 0.0) {
-          iter.add(upperPart);
-        }
-      }
+    
+    @Test
+    public void testRangesRemove1() {
+        Ranges ranges = new Ranges(1.0, 100.0);
+        Interval toRemove = new Interval(1.0, 100.0);
+        ranges.remove(toRemove);
+        assertThat (ranges.toString(), is("[]")); // checks ranges.iterator()
     }
-  }
-
-  /**
-   * The sum of the widths of all remaining intervals on the number line.
-   * 
-   * @return the sum
-   */
-  public double sum() {
-    double total = 0.0;
-    for (Interval interval : remaining) {
-      total += interval.width();
+    
+    @Test
+    public void testRangesRemove2() {
+        Ranges ranges = new Ranges(1.0, 100.0);
+        Interval toRemove = new Interval(5.0, 100.1);
+        ranges.remove(toRemove);
+        Interval[] expected = { new Interval(1.0, 5.0) };
+        assertThat (ranges, contains(expected) ); // checks ranges.iterator()
     }
-    return total;
-  }
-
-  
-  /**
-   * For debugging purposes. Contents and format are not specified.
-   */
-  public String toString() {
-    return remaining.toString();
-  }
-
-  /**
-   * Allow iteration over the remaining intervals. Intervals will be disjoint and
-   * will be presented in ascending order of starting position.
-   * 
-   * @return an iterator for the remaining intervals
-   */
-  public Iterator<Interval> iterator() {
-    return remaining.iterator();
-  }
-
-
+    
+    @Test
+    public void testRangesRemove3() {
+        Ranges ranges = new Ranges(1.0, 100.0);
+        Interval toRemove = new Interval(5.0, 50.0);
+        ranges.remove(toRemove);
+        Interval[] expected = { new Interval(1.0, 5.0) ,  new Interval(50.0, 100.0) };
+        assertThat (ranges, contains(expected) ); // checks ranges.iterator()
+    }
+    
+    @Test
+    public void testRangesRemove4() {
+        Ranges ranges = new Ranges(2.0, 100.0);
+        Interval toRemove = new Interval(1.0, 100.0);
+        ranges.remove(toRemove);
+        assertThat (ranges.toString(), is("[]") ); // checks ranges.iterator()
+    }
+    
+    @Test
+    public void testRangesRemove5() {
+        Ranges ranges = new Ranges(2.0, 100.0);
+        Interval toRemove = new Interval(1.0, 110.0);
+        ranges.remove(toRemove);
+        assertThat (ranges.toString(), is("[]") ); // checks ranges.iterator()
+    }
+    
+    @Test
+    public void testRangesToString() {
+        Ranges ranges = new Ranges(1.0, 100.0);
+        String expected = "[(1.0,100.0)]";
+        assertThat (ranges.toString(), is(expected)); // checks ranges.iterator()
+    }
+    
+    @Test
+    public void testRangesIterator() {
+        Ranges ranges = new Ranges(1.0, 100.0);
+        assertThat (ranges.iterator().hasNext(), is(true)); // checks ranges.iterator()
+    }
+    
 }
