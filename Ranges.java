@@ -1,5 +1,5 @@
+package edu.odu.cs;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -7,13 +7,9 @@ import java.util.ListIterator;
 /**
  * An ordered sequence of disjoint (non-overlapping) intervals.   
  */
-public class Ranges extends edu.odu.cs.cs350.unitTesting.UnitTestTracker implements Iterable<Interval> {
+public class Ranges implements Iterable<Interval> {
 
-  private static String[] mutatorNames = {"remove"};
-  private static String[] accessorNames = {"sum", "iterator"};
-  
-
-  private LinkedList<Interval> remaining;
+  LinkedList<Interval> remaining;
 
   /**
    * Create a range with no gaps.
@@ -21,9 +17,7 @@ public class Ranges extends edu.odu.cs.cs350.unitTesting.UnitTestTracker impleme
    * @param low
    * @param high
    */
-  public Ranges(double low, double high) {
-    super(Ranges.class, Arrays.asList(mutatorNames), Arrays.asList(accessorNames));
-    mutate();
+  Ranges(double low, double high) {
     remaining = new LinkedList<>();
     remaining.add(new Interval(low, high));
   }
@@ -36,7 +30,6 @@ public class Ranges extends edu.odu.cs.cs350.unitTesting.UnitTestTracker impleme
    * @param toRemove the range of numbers to subtract
    */
   public void remove(Interval toRemove) {
-    mutate();
     if (toRemove.width() == 0.0) {
       return;
     }
@@ -51,7 +44,7 @@ public class Ranges extends edu.odu.cs.cs350.unitTesting.UnitTestTracker impleme
         iter.remove();
         if (lowerPart.width() > 0.0) {
           iter.add(lowerPart);
-        }
+        } else
         if (upperPart.width() > 0.0) {
           iter.add(upperPart);
         }
@@ -65,7 +58,6 @@ public class Ranges extends edu.odu.cs.cs350.unitTesting.UnitTestTracker impleme
    * @return the sum
    */
   public double sum() {
-    access();
     double total = 0.0;
     for (Interval interval : remaining) {
       total += interval.width();
@@ -88,7 +80,6 @@ public class Ranges extends edu.odu.cs.cs350.unitTesting.UnitTestTracker impleme
    * @return an iterator for the remaining intervals
    */
   public Iterator<Interval> iterator() {
-    access();
     return remaining.iterator();
   }
 
